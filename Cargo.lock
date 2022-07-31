@@ -182,7 +182,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "rustfetch"
+name = "rustyfetch"
 version = "0.1.0"
 dependencies = [
  "colored",
