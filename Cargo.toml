@@ -2,6 +2,8 @@
 name = "rustfetch"
 version = "0.1.0"
 edition = "2021"
+description = "Fetch your system information via Rust!"
+license = "AGPL-3.0"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
