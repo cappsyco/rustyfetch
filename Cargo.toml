@@ -1,5 +1,5 @@
 [package]
-name = "rustfetch"
+name = "rustyfetch"
 version = "0.1.0"
 edition = "2021"
 description = "Fetch your system information via Rust!"
