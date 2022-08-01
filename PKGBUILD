@@ -11,7 +11,7 @@ license=("AGPL-3.0")
 arch=("x86_64")
 provides=("rustyfetch")
 conflicts=("rustyfetch")
-source=("https://github.com/jonasrdl/rustfetch/releases/download/v$pkgver/rustyfetch-$pkgver-x86_64.tar.gz")
+source=("https://github.com/jonasrdl/rustfetch/releases/download/$pkgver/rustyfetch-$pkgver-x86_64.tar.gz")
 sha256sums=("de33a946da3552563b45756ef437a39460d20aab2517c0aa8b224134ef267d46")
 
 package() {
