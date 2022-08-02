@@ -1,7 +1,7 @@
-use std::io;
 use colored::*;
-use sysinfo::SystemExt;
 use os_release::OsRelease;
+use std::io;
+use sysinfo::SystemExt;
 
 fn main() {
     let mut sys = sysinfo::System::new();
@@ -14,18 +14,19 @@ fn main() {
     let kernel = sys.kernel_version().unwrap();
     let distro = get_distro().unwrap().name;
 
-    match distro.as_str() {
-        "Arch Linux" => eprintln!("{}", include_str!("arch").bold().white()),
-        _ => println!("Distro banner not supported!")
+    if distro.to_lowercase().contains("arch") {
+        eprintln!("{}", include_str!("ascii-arts/arch").bold().white());
+    } else {
+        println!("Distro currently not supported!");
     }
 
-    print!(
+    println!(
         "Hostname: {}\n\
         Uptime: {}hrs, {}min\n\
         Kernel: {}\n\
-        Distro: {}
-        "
-    , hostname, uptime_hours as u64, uptime_minutes as u64, kernel, distro);
+        Distro: {}",
+        hostname, uptime_hours as u64, uptime_minutes as u64, kernel, distro
+    );
 }
 
 pub fn get_distro() -> Result<OsRelease, io::Error> {
