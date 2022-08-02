@@ -15,7 +15,7 @@ fn main() {
     let distro = get_distro().unwrap().name;
 
     if distro.to_lowercase().contains("arch") {
-        eprintln!("{}", include_str!("ascii-arts/arch").bold().white());
+        eprintln!("{}", include_str!("ascii-arts/arch").bold().green());
     } else {
         println!("Distro currently not supported!");
     }
