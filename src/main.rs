@@ -3,6 +3,16 @@ use os_release::OsRelease;
 use std::io;
 use sysinfo::SystemExt;
 
+const ARCH_BASED_DISTROS: [&str; 2] = ["arch", "arcolinux"];
+
+fn is_distro_arch_based(distro: &&str) -> bool {
+    return if ARCH_BASED_DISTROS.contains(&&*distro.clone().to_lowercase()) {
+        true
+    } else {
+        false
+    }
+}
+
 fn main() {
     let mut sys = sysinfo::System::new();
 
@@ -14,8 +24,10 @@ fn main() {
     let kernel = sys.kernel_version().unwrap();
     let distro = get_distro().unwrap().name;
 
-    if distro.to_lowercase().contains("arch") {
+    if is_distro_arch_based(&&*distro) {
         eprintln!("{}", include_str!("ascii-arts/arch").bold().green());
+    } else if distro.to_lowercase().contains("ubuntu") {
+        eprintln!("{}", include_str!("ascii-arts/ubuntu").bold().red());
     } else {
         println!("Distro currently not supported!");
     }
