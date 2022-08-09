@@ -15,6 +15,7 @@ fn is_distro_arch_based(distro: &&str) -> bool {
 }
 
 fn main() {
+    let divider: ColoredString = "--------------------".bold().green();
     let mut sys = sysinfo::System::new();
 
     sys.refresh_all();
@@ -36,11 +37,11 @@ fn main() {
 
     println!(
         "{}@{}\n\
-        --------------------\n\
+        {}\n\
         Uptime: {}hrs, {}min\n\
         Kernel: {}\n\
         Distro: {}",
-        username, hostname, uptime_hours as u64, uptime_minutes as u64, kernel, distro
+        username, hostname, divider, uptime_hours as u64, uptime_minutes as u64, kernel, distro
     );
 }
 
