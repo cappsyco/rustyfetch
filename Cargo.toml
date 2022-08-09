@@ -1,6 +1,6 @@
 [package]
 name = "rustyfetch"
-version = "0.1.7"
+version = "0.1.8"
 edition = "2021"
 description = "Fetch your system information via Rust!"
 license = "AGPL-3.0"
@@ -11,6 +11,7 @@ repository = "https://github.com/jonasrdl/rustfetch"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-sysinfo = "0.24.7"
+sysinfo = "0.25.1"
 colored = "2.0.0"
 os-release = "0.1.0"
+whoami = "1.2.1"

@@ -2,6 +2,7 @@ use colored::*;
 use os_release::OsRelease;
 use std::io;
 use sysinfo::SystemExt;
+use whoami;
 
 const ARCH_BASED_DISTROS: [&str; 2] = ["arch", "arcolinux"];
 
@@ -23,6 +24,7 @@ fn main() {
     let uptime_minutes = (uptime_hours % 1.0) * 60.0;
     let kernel = sys.kernel_version().unwrap();
     let distro = get_distro().unwrap().name;
+    let username = get_username();
 
     if is_distro_arch_based(&&*distro) {
         eprintln!("{}", include_str!("ascii-arts/arch").bold().green());
@@ -33,14 +35,19 @@ fn main() {
     }
 
     println!(
-        "Hostname: {}\n\
+        "{}@{}\n\
+        --------------------\n\
         Uptime: {}hrs, {}min\n\
         Kernel: {}\n\
         Distro: {}",
-        hostname, uptime_hours as u64, uptime_minutes as u64, kernel, distro
+        username, hostname, uptime_hours as u64, uptime_minutes as u64, kernel, distro
     );
 }
 
 pub fn get_distro() -> Result<OsRelease, io::Error> {
     return OsRelease::new();
+}
+
+pub fn get_username() -> String {
+    whoami::username()
 }
