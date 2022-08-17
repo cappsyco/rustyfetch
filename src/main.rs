@@ -11,7 +11,7 @@ fn is_distro_arch_based(distro: &&str) -> bool {
         true
     } else {
         false
-    }
+    };
 }
 
 fn main() {
@@ -31,6 +31,8 @@ fn main() {
         eprintln!("{}", include_str!("ascii-arts/arch").bold().green());
     } else if distro.to_lowercase().contains("ubuntu") {
         eprintln!("{}", include_str!("ascii-arts/ubuntu").bold().red());
+    } else if distro.to_lowercase().contains("manjaro") {
+        eprintln!("{}", include_str!("ascii-arts/manjaro").bold().green());
     } else {
         println!("Distro currently not supported!");
     }
