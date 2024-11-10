@@ -6,8 +6,8 @@ use whoami;
 
 const ARCH_BASED_DISTROS: [&str; 2] = ["arch", "arcolinux"];
 
-fn is_distro_arch_based(distro: &&str) -> bool {
-    return if ARCH_BASED_DISTROS.contains(&&*distro.clone().to_lowercase()) {
+fn is_distro_arch_based(distroid: &&str) -> bool {
+    return if ARCH_BASED_DISTROS.contains(&&*distroid) {
         true
     } else {
         false
@@ -25,9 +25,10 @@ fn main() {
     let uptime_minutes = (uptime_hours % 1.0) * 60.0;
     let kernel = sys.kernel_version().unwrap();
     let distro = get_distro().unwrap().name;
+    let distroid = get_distro().unwrap().id;
     let username = get_username();
 
-    if is_distro_arch_based(&&*distro) {
+    if is_distro_arch_based(&&*distroid) {
         eprintln!("{}", include_str!("ascii-arts/arch").bold().green());
     } else if distro.to_lowercase().contains("ubuntu") {
         eprintln!("{}", include_str!("ascii-arts/ubuntu").bold().red());
