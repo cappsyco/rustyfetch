@@ -1,46 +1,42 @@
 use colored::*;
 use os_release::OsRelease;
-use std::io;
 use sysinfo::{CpuExt, DiskExt, System, SystemExt};
 use whoami;
 
 const ARCH_BASED_DISTROS: [&str; 2] = ["arch", "arcolinux"];
 
-fn is_distro_arch_based(distroid: &&str) -> bool {
-    if ARCH_BASED_DISTROS.contains(&&*distroid) {
-        true
-    } else {
-        false
-    }
+fn is_distro_arch_based(distroid: &str) -> bool {
+    ARCH_BASED_DISTROS.contains(&distroid)
 }
 
 fn main() {
     let divider: ColoredString = "--------------------".bold().green();
+
     let mut sys = System::new_all();
     sys.refresh_all();
 
     let hostname = sys.host_name().unwrap_or_else(|| "Unknown".to_string());
-    let uptime_hours = sys.uptime() as f64 / 3600.0;
-    let uptime_minutes = (uptime_hours % 1.0) * 60.0;
     let kernel = sys.kernel_version().unwrap_or_else(|| "Unknown".to_string());
-    let distro = get_distro().unwrap().name;
-    let distroid = get_distro().unwrap().id;
-    let username = get_username();
     let cpu_name = sys.global_cpu_info().brand().to_string();
     let core_count = sys.physical_core_count().unwrap_or(1);
     let memory_used = sys.used_memory() / 1024; // MB
     let memory_total = sys.total_memory() / 1024; // MB
     let disk_used = get_used_disk_space(&sys) / 1024 / 1024 / 1024; // GB
     let disk_total = get_total_disk_space(&sys) / 1024 / 1024 / 1024; // GB
+    let uptime_hours = sys.uptime() / 3600;
+    let uptime_minutes = (sys.uptime() % 3600) / 60;
 
-    if is_distro_arch_based(&&*distroid) {
-        eprintln!("{}", include_str!("ascii-arts/arch").bold().green());
-    } else if distroid=="ubuntu" {
-        eprintln!("{}", include_str!("ascii-arts/ubuntu").bold().red());
-    } else if distroid=="manjaro" {
-        eprintln!("{}", include_str!("ascii-arts/manjaro").bold().green());
-    } else {
-        println!("Distro currently not supported!");
+    let distro_info = get_distro();
+    let distro_name = distro_info.name;
+    let distro_id = distro_info.id;
+
+    let username = whoami::username();
+
+    match distro_id.as_str() {
+        id if is_distro_arch_based(id) => eprintln!("{}", include_str!("ascii-arts/arch").bold().green()),
+        "ubuntu" => eprintln!("{}", include_str!("ascii-arts/ubuntu").bold().red()),
+        "manjaro" => eprintln!("{}", include_str!("ascii-arts/manjaro").bold().green()),
+        _ => println!("Distro currently not supported!"),
     }
 
     println!(
@@ -53,8 +49,8 @@ fn main() {
     println!(
         "{:<10}: {} hrs, {} mins",
         "Uptime".bold().blue(),
-        uptime_hours as u64,
-        uptime_minutes as u64
+        uptime_hours,
+        uptime_minutes
     );
     println!(
         "{:<10}: {}",
@@ -64,7 +60,7 @@ fn main() {
     println!(
         "{:<10}: {}",
         "Distro".bold().blue(),
-        distro.bold()
+        distro_name.bold()
     );
     println!(
         "{:<10}: {} ({} cores)",
@@ -86,22 +82,21 @@ fn main() {
     );
 }
 
-pub fn get_distro() -> Result<OsRelease, io::Error> {
-    OsRelease::new()
+fn get_distro() -> OsRelease {
+    OsRelease::new().unwrap_or_else(|_| OsRelease {
+        name: "Unknown".to_string(),
+        id: "unknown".to_string(),
+        pretty_name: "Unknown".to_string(),
+        version: "Unknown".to_string(),
+        ..Default::default()
+    })
 }
 
-pub fn get_username() -> String {
-    whoami::username()
+fn get_total_disk_space(sys: &System) -> u64 {
+    sys.disks().iter().map(|disk| disk.total_space()).sum()
 }
 
-pub fn get_total_disk_space(sys: &System) -> u64 {
-    sys.disks()
-        .iter()
-        .map(|disk | disk.total_space())
-        .sum()
-}
-
-pub fn get_used_disk_space(sys: &System) -> u64 {
+fn get_used_disk_space(sys: &System) -> u64 {
     sys.disks()
         .iter()
         .map(|disk| disk.total_space() - disk.available_space())
