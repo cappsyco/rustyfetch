@@ -225,7 +225,7 @@ dependencies = [
 
 [[package]]
 name = "rustyfetch"
-version = "0.1.91"
+version = "0.2.0"
 dependencies = [
  "colored",
  "os-release",
